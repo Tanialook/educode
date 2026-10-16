@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduCode - Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0A;--panel:#141414;--border:#262626;--text:#E5E5E5;--muted:#A3A3A3;--accent:#F59E0B;--accent-hover:#D97706;--code-bg:#0D0D0D;}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;}
+a{color:inherit;text-decoration:none;}
+button,input,textarea{font-family:inherit;}
+
+/* BRAND */
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:16px;font-weight:700;color:var(--text);flex-shrink:0;}
+.brand-logo{height:32px;width:auto;object-fit:contain;mix-blend-mode:screen;}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 22px;height:60px;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+.search-box{flex:1;max-width:450px;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:6px 16px;color:var(--muted);}
+.search-box input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:12px;}
+.top-links{display:flex;gap:24px;color:var(--muted);font-size:12px;}
+.top-links a:hover{color:var(--accent);}
+
+/* LAYOUT */
+.app-shell{display:grid;grid-template-columns:220px minmax(0,1fr) 260px;grid-template-rows:60px minmax(0,1fr);max-width:1440px;min-height:100vh;margin:0 auto;background:var(--bg);}
+.topbar{grid-column:1/-1;grid-row:1;}
+
+/* LEFT SIDEBAR */
+.left-sidebar{grid-column:1;grid-row:2;padding:20px 12px;display:flex;flex-direction:column;border-right:1px solid var(--border);}
+.nav-section{display:flex;flex-direction:column;gap:2px;}
+.nav-item-custom{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;color:var(--muted);font-size:13px;font-weight:500;transition:.2s;}
+.nav-item-custom i{width:18px;font-size:16px;}
+.nav-item-custom:hover{background:var(--panel);color:var(--text);}
+.nav-item-custom.active{color:var(--accent);background:rgba(245,158,11,.1);}
+.nav-divider{border-top:1px solid var(--border);margin:16px 0;}
+.nav-badge{margin-left:auto;background:var(--accent);color:#000;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;}
+.profile-link{display:flex;align-items:center;gap:10px;padding:8px 12px;margin-top:4px;border-radius:8px;}
+.profile-link:hover{background:var(--panel);}
+.avatar{width:32px;height:32px;border-radius:50%;background:#9A3412;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.avatar.purple{background:#5B21B6;}
+.profile-name{font-size:12px;font-weight:600;}
+.sidebar-bottom{margin-top:auto;padding:12px;display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;}
+.theme-toggle{width:32px;height:18px;background:#333;border-radius:20px;position:relative;cursor:pointer;}
+.theme-toggle::after{content:'';position:absolute;top:2px;right:2px;width:14px;height:14px;background:var(--accent);border-radius:50%;}
+
+/* CENTER FEED */
+.main-feed{grid-column:2;grid-row:2;padding:20px;min-width:0;}
+.post-composer{background:var(--panel);border:1px solid var(--border);border-radius:12px;margin-bottom:24px;overflow:hidden;}
+.post-composer textarea{width:100%;height:80px;padding:16px;background:transparent;border:none;outline:none;color:var(--text);font-size:13px;resize:none;}
+.post-composer textarea::placeholder{color:#555;}
+.composer-footer{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:rgba(255,255,255,.02);border-top:1px solid var(--border);}
+.composer-tools{display:flex;align-items:center;gap:16px;color:var(--muted);}
+.composer-tools button{background:transparent;border:none;color:var(--muted);font-size:16px;cursor:pointer;}
+.composer-tools button:hover{color:var(--accent);}
+.btn-orange{background:var(--accent);color:#000;border:none;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer;transition:.2s;}
+.btn-orange:hover{background:var(--accent-hover);color:#fff;}
+
+/* FEED TABS */
+.feed-tabs{display:flex;gap:24px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.feed-tab{background:transparent;border:none;color:var(--muted);font-size:12px;font-weight:600;padding:0 0 12px;border-bottom:2px solid transparent;display:flex;align-items:center;gap:6px;cursor:pointer;}
+.feed-tab.active{color:var(--text);border-bottom-color:var(--text);}
+.feed-tab.active i{color:#EF4444;}
+.feed-tab:hover{color:var(--text);}
+
+/* POST */
+.post-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;}
+.post-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.post-user-info{flex:1;}
+.post-user{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;}
+.post-user .verified{color:var(--accent);font-size:14px;}
+.post-time{font-size:11px;color:var(--muted);margin-top:2px;}
+.post-menu{background:transparent;border:none;color:var(--muted);font-size:18px;cursor:pointer;}
+.post-title{font-size:14px;font-weight:600;margin:0 0 10px;line-height:1.5;}
+.post-body{font-size:13px;line-height:1.7;color:#B0B0B0;margin-bottom:14px;}
+.code-block{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;margin-bottom:14px;overflow:hidden;}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+.code-header button{background:transparent;border:none;color:var(--muted);cursor:pointer;}
+.code-block pre{margin:0;padding:16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;color:#E5E5E5;overflow-x:auto;white-space:pre-wrap;}
+.code-keyword{color:#C084FC;}
+.code-string{color:#86EFAC;}
+.read-more{display:block;width:100%;padding:10px;background:transparent;border:none;border-top:1px solid var(--border);color:var(--muted);font-size:12px;text-align:center;cursor:pointer;}
+.read-more:hover{color:var(--accent);}
+.hashtags{display:flex;gap:8px;margin-bottom:14px;}
+.hashtags a{color:var(--muted);font-size:12px;}
+.hashtags a:hover{color:var(--accent);}
+.post-actions{display:flex;gap:8px;}
+.action-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;background:transparent;border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:11px;cursor:pointer;transition:.2s;}
+.action-btn:hover{background:var(--panel);color:var(--text);}
+.action-btn.liked{border-color:var(--accent);color:var(--accent);}
+.action-btn.like i{color:#EF4444;}
+
+/* RIGHT SIDEBAR */
+.right-sidebar{grid-column:3;grid-row:2;padding:20px 16px;border-left:1px solid var(--border);}
+.promo-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:24px;position:relative;}
+.promo-title{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.promo-title i{color:var(--accent);}
+.promo-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px;}
+.promo-actions{display:flex;gap:8px;}
+.promo-actions .btn-orange{flex:1;padding:8px;font-size:11px;}
+.btn-secondary-custom{flex:1;padding:8px;font-size:11px;background:#1F1F1F;border:1px solid var(--border);color:var(--text);border-radius:6px;text-align:center;}
+.right-section{margin-bottom:24px;}
+.section-title{font-size:13px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.section-title i{color:var(--accent);}
+.trending-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.trending-tag{background:var(--panel);border:1px solid var(--border);padding:4px 10px;border-radius:6px;font-size:11px;color:var(--muted);cursor:pointer;}
+.trending-tag:hover{border-color:var(--accent);color:var(--accent);}
+.channel-list{display:flex;flex-direction:column;gap:4px;}
+.channel-item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;}
+.channel-item:hover{background:var(--panel);color:var(--text);}
+.channel-icon{width:24px;height:24px;background:var(--panel);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#38BDF8;}
+.follow-btn{margin-left:auto;background:transparent;border:none;color:var(--muted);font-size:11px;cursor:pointer;}
+.follow-btn:hover{color:var(--accent);}
+.discussion-item{display:block;padding:10px 0;border-bottom:1px solid var(--border);color:var(--muted);font-size:12px;line-height:1.5;}
+.discussion-item:hover{color:var(--accent);}
+.discussion-meta{font-size:11px;color:#555;margin-top:4px;}
+
+/* RESPONSIVE */
+@media(max-width:1050px){.app-shell{grid-template-columns:200px minmax(0,1fr);}.right-sidebar{display:none;}}
+@media(max-width:700px){.app-shell{display:flex;flex-direction:column;}.topbar{gap:10px;padding:0 12px;}.search-box{padding:4px 12px;}.top-links{display:none;}.left-sidebar{display:none;}.main-feed{padding:16px;}}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+<header class="topbar">
+    <a href="index.html" class="brand">
+        <img src="educode.png" alt="EduCode Logo" class="brand-logo">
+    </a>
+    <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="search" placeholder="Cari materi atau diskusi...">
+    </div>
+    <nav class="top-links">
+        <a href="courses.html">Kursus</a>
+        <a href="forum.html">Forum</a>
+        <a href="jobs.html">Job Board</a>
+    </nav>
+</header>
+
+<aside class="left-sidebar">
+    <div class="nav-section">
+        <a href="dashboard.html" class="nav-item-custom active"><i class="bi bi-house-door-fill"></i><span>Dashboard</span></a>
+        <a href="courses.html" class="nav-item-custom"><i class="bi bi-book-fill"></i><span>Katalog Kursus</span></a>
+        <a href="forum.html" class="nav-item-custom"><i class="bi bi-chat-left-text-fill"></i><span>Forum Diskusi</span><span class="nav-badge">2</span></a>
+        <a href="jobs.html" class="nav-item-custom"><i class="bi bi-briefcase-fill"></i><span>Job Board</span></a>
+        <a href="profile.html" class="nav-item-custom"><i class="bi bi-person-fill"></i><span>Profil Saya</span></a>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-section">
+        <a href="#" class="nav-item-custom"><i class="bi bi-bell-fill"></i><span>Notifikasi</span><span class="nav-badge">3</span></a>
+        <a href="#" class="nav-item-custom"><i class="bi bi-gear-fill"></i><span>Pengaturan</span></a>
+    </div>
+    <div class="nav-divider"></div>
+    <a href="profile.html" class="profile-link">
+        <div class="avatar">BS</div>
+        <div class="profile-name">Budi Santoso</div>
+    </a>
+    <div class="sidebar-bottom">
+        <span>Dark Theme</span>
+        <div class="theme-toggle"></div>
+    </div>
+</aside>
+
+<main class="main-feed">
+
+    <section class="post-composer">
+        <textarea placeholder="Mulai Diskusi Baru..."></textarea>
+        <div class="composer-footer">
+            <div class="composer-tools">
+                <button type="button"><i class="bi bi-file-earmark-code"></i></button>
+                <button type="button"><i class="bi bi-image"></i></button>
+                <button type="button"><i class="bi bi-emoji-smile"></i></button>
+                <span style="font-size:12px;color:#555;">Diskusi</span>
+            </div>
+            <button class="btn-orange" type="button">Posting <i class="bi bi-send-fill"></i></button>
+        </div>
+    </section>
+
+    <nav class="feed-tabs">
+        <button class="feed-tab active"><i class="bi bi-heart-fill"></i> Untuk Kamu</button>
+        <button class="feed-tab"><i class="bi bi-fire"></i> Terbaru</button>
+        <button class="feed-tab"><i class="bi bi-graph-up-arrow"></i> Populer</button>
+    </nav>
+
+    <article class="post-card">
+        <header class="post-header">
+            <div class="avatar">AD</div>
+            <div class="post-user-info">
+                <div class="post-user">Andi_Dev <i class="bi bi-patch-check-fill verified"></i></div>
+                <div class="post-time">2 jam yang lalu</div>
+            </div>
+            <button class="post-menu"><i class="bi bi-three-dots"></i></button>
+        </header>
+        <h2 class="post-title">💡 Tips belajar JavaScript fundamental</h2>
+        <p class="post-body">
+            Buat kalian yang baru mulai belajar JavaScript, jangan langsung lompat ke framework seperti React. Pahami dulu dasar-dasarnya seperti variabel, tipe data, function, dan kondisi.<br><br>
+            Mulai dari kode sederhana, pahami cara kerjanya, lalu coba modifikasi sendiri. Konsistensi latihan jauh lebih penting daripada sekadar menghafal syntax!
+        </p>
+        <div class="code-block">
+            <div class="code-header">
+                <span>JavaScript · hello.js</span>
+                <button onclick="navigator.clipboard.writeText('console.log(\"Hello EduCode!\");').then(()=>this.innerHTML='✓ Tersalin')"><i class="bi bi-copy"></i></button>
+            </div>
+            <pre><span class="code-keyword">console</span>.log(<span class="code-string">"Hello EduCode!"</span>);</pre>
+            <button class="read-more">Lihat contoh lainnya <i class="bi bi-arrow-right"></i></button>
+        </div>
+        <div class="hashtags"><a href="#">#javascript</a><a href="#">#belajarcoding</a></div>
+        <footer class="post-actions">
+            <button class="action-btn like" onclick="this.classList.toggle('liked')"><i class="bi bi-hand-thumbs-up-fill"></i> <span>204</span></button>
+            <button class="action-btn"><i class="bi bi-chat"></i> 24</button>
+            <button class="action-btn" onclick="navigator.clipboard.writeText(window.location.href)"><i class="bi bi-share"></i> 40</button>
+        </footer>
+    </article>
+
+    <article class="post-card">
+        <header class="post-header">
+            <div class="avatar purple">SC</div>
+            <div class="post-user-info">
+                <div class="post-user">Siti_Coder</div>
+                <div class="post-time">35 menit yang lalu</div>
+            </div>
+            <button class="post-menu"><i class="bi bi-three-dots"></i></button>
+        </header>
+        <h2 class="post-title">🙋 Kenapa CSS saya tidak jalan?</h2>
+        <p class="post-body">
+            Halo teman-teman EduCode! Aku lagi belajar HTML dan CSS, tapi style yang aku buat kok tidak muncul di browser, ya? Aku sudah menghubungkan file CSS ke HTML, tetapi tampilannya masih seperti HTML biasa.<br><br>
+            Kira-kira apa saja yang perlu aku cek? Barangkali ada yang pernah mengalami masalah yang sama. Terima kasih!
+        </p>
+        <div class="code-block">
+            <div class="code-header"><span>HTML · index.html</span><i class="bi bi-filetype-html"></i></div>
+            <pre><span class="code-keyword">&lt;head&gt;</span>
+  <span class="code-string">&lt;link rel="stylesheet" href="style.css"&gt;</span>
+<span class="code-keyword">&lt;/head&gt;</span></pre>
+        </div>
+        <div class="hashtags"><a href="#">#css</a><a href="#">#frontend</a></div>
+        <footer class="post-actions">
+            <button class="action-btn like" onclick="this.classList.toggle('liked')"><i class="bi bi-hand-thumbs-up-fill"></i> <span>18</span></button>
+            <button class="action-btn"><i class="bi bi-chat"></i> 12</button>
+            <button class="action-btn" onclick="navigator.clipboard.writeText(window.location.href)"><i class="bi bi-share"></i> 5</button>
+        </footer>
+    </article>
+
+</main>
+
+<aside class="right-sidebar">
+    <div class="promo-card">
+        <h2 class="promo-title"><i class="bi bi-stars"></i> Tingkatkan Skill Kamu!</h2>
+        <p class="promo-desc">Akses semua kursus premium dan tingkatkan kemampuan coding kamu bersama mentor berpengalaman.</p>
+        <div class="promo-actions">
+            <a href="courses.html" class="btn-orange">Upgrade</a>
+            <a href="courses.html" class="btn-secondary-custom">Jelajahi</a>
+        </div>
+    </div>
+
+    <div class="right-section">
+        <h2 class="section-title">Trending Topics</h2>
+        <div class="trending-tags">
+            <a href="#" class="trending-tag">#html</a>
+            <a href="#" class="trending-tag">#css</a>
+            <a href="#" class="trending-tag">#javascript</a>
+            <a href="#" class="trending-tag">#reactjs</a>
+            <a href="#" class="trending-tag">#python</a>
+        </div>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="right-section">
+        <h2 class="section-title">Official Channels <i class="bi bi-patch-check-fill"></i></h2>
+        <div class="channel-list">
+            <a href="#" class="channel-item"><span class="channel-icon"><i class="bi bi-code-square"></i></span><span>VS Code</span><button class="follow-btn" onclick="event.preventDefault()">+ Follow</button></a>
+            <a href="#" class="channel-item"><span class="channel-icon"><i class="bi bi-atom"></i></span><span>React</span><button class="follow-btn" onclick="event.preventDefault()">+ Follow</button></a>
+            <a href="#" class="channel-item"><span class="channel-icon"><i class="bi bi-wind"></i></span><span>Tailwind CSS</span><button class="follow-btn" onclick="event.preventDefault()">+ Follow</button></a>
+        </div>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="right-section">
+        <h2 class="section-title">Top Discussions <i class="bi bi-fire"></i></h2>
+        <a href="#" class="discussion-item"><div>Bagaimana cara deploy ke Vercel?</div><div class="discussion-meta"><i class="bi bi-chat-dots"></i> 128 komentar</div></a>
+        <a href="#" class="discussion-item"><div>Apa perbedaan let dan const?</div><div class="discussion-meta"><i class="bi bi-chat-dots"></i> 86 komentar</div></a>
+    </div>
+</aside>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.querySelectorAll('.feed-tab').forEach(tab=>{tab.addEventListener('click',()=>{document.querySelectorAll('.feed-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');});});
+</script>
+</body>
+</html>

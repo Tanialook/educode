@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduCode - Katalog Kursus</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0A;--panel:#141414;--border:#262626;--text:#E5E5E5;--muted:#A3A3A3;--accent:#F59E0B;--accent-hover:#D97706;}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;}
+a{color:inherit;text-decoration:none;}
+button,input,select{font-family:inherit;}
+
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:16px;font-weight:700;color:var(--text);flex-shrink:0;}
+.brand-logo{height:32px;width:auto;object-fit:contain;mix-blend-mode:screen;}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 22px;height:60px;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+.search-box{flex:1;max-width:450px;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:6px 16px;color:var(--muted);}
+.search-box input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:12px;}
+.top-links{display:flex;gap:24px;color:var(--muted);font-size:12px;}
+.top-links a:hover{color:var(--accent);}
+
+.layout{display:grid;grid-template-columns:220px 1fr;max-width:1440px;margin:0 auto;min-height:calc(100vh - 60px);}
+.sidebar{padding:20px 12px;border-right:1px solid var(--border);}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;color:var(--muted);font-size:13px;font-weight:500;transition:.2s;}
+.nav-item i{width:18px;font-size:16px;}
+.nav-item:hover{background:var(--panel);color:var(--text);}
+.nav-item.active{color:var(--accent);background:rgba(245,158,11,.1);}
+.nav-divider{border-top:1px solid var(--border);margin:16px 0;}
+.profile-link{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;}
+.profile-link:hover{background:var(--panel);}
+.avatar{width:32px;height:32px;border-radius:50%;background:#9A3412;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;}
+
+.main{padding:24px;min-width:0;}
+.page-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+.page-head h1{font-size:22px;font-weight:700;margin:0;}
+.page-head p{color:var(--muted);font-size:12px;margin:4px 0 0;}
+
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;padding:16px;background:var(--panel);border:1px solid var(--border);border-radius:12px;}
+.filter-input{flex:1;min-width:200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:12px;outline:none;}
+.filter-input:focus{border-color:var(--accent);}
+.filter-select{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:12px;outline:none;cursor:pointer;}
+
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;}
+.course-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:.2s;}
+.course-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.course-thumb{height:120px;background:linear-gradient(135deg,#1F1F1F,#2D2D2D);display:flex;align-items:center;justify-content:center;font-size:40px;color:var(--accent);position:relative;}
+.course-level{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.7);color:var(--accent);padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;}
+.course-body{padding:16px;}
+.course-cat{font-size:10px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.course-title{font-size:14px;font-weight:700;margin:0 0 8px;line-height:1.4;min-height:40px;}
+.course-mentor{font-size:11px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.course-mentor-avatar{width:20px;height:20px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;}
+.course-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:10px;}
+.course-price{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:12px;}
+.btn-detail{display:block;width:100%;padding:8px;background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:8px;font-size:11px;font-weight:700;text-align:center;cursor:pointer;}
+.btn-detail:hover{background:var(--accent);color:#000;}
+
+.pagination{display:flex;justify-content:center;gap:6px;margin-top:32px;}
+.page-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:12px;font-weight:600;background:transparent;cursor:pointer;}
+.page-btn:hover{border-color:var(--accent);color:var(--accent);}
+.page-btn.active{background:var(--accent);color:#000;border-color:var(--accent);}
+
+@media(max-width:900px){.layout{grid-template-columns:1fr;}.sidebar{display:none;}.top-links{display:none;}.main{padding:16px;}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+    <a href="index.html" class="brand">
+        <img src="educode.png" alt="EduCode Logo" class="brand-logo">
+    </a>
+    <div class="search-box"><i class="bi bi-search"></i><input type="search" placeholder="Cari kursus..."></div>
+    <nav class="top-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="forum.html">Forum</a>
+        <a href="jobs.html">Job Board</a>
+    </nav>
+</header>
+
+<div class="layout">
+    <aside class="sidebar">
+        <a href="dashboard.html" class="nav-item"><i class="bi bi-house-door-fill"></i> Dashboard</a>
+        <a href="courses.html" class="nav-item active"><i class="bi bi-book-fill"></i> Katalog Kursus</a>
+        <a href="forum.html" class="nav-item"><i class="bi bi-chat-left-text-fill"></i> Forum Diskusi</a>
+        <a href="jobs.html" class="nav-item"><i class="bi bi-briefcase-fill"></i> Job Board</a>
+        <a href="profile.html" class="nav-item"><i class="bi bi-person-fill"></i> Profil Saya</a>
+        <div class="nav-divider"></div>
+        <a href="admin.html" class="nav-item"><i class="bi bi-shield-fill"></i> Admin</a>
+        <div class="nav-divider"></div>
+        <a href="profile.html" class="profile-link">
+            <div class="avatar">BS</div>
+            <div style="font-size:12px;font-weight:600;">Budi Santoso</div>
+        </a>
+    </aside>
+
+    <main class="main">
+        <div class="page-head">
+            <div>
+                <h1>📚 Katalog Kursus</h1>
+                <p>Pilih kursus yang sesuai dengan tujuan belajarmu</p>
+            </div>
+        </div>
+
+        <div class="filters">
+            <input type="text" class="filter-input" placeholder="🔍 Cari kursus...">
+            <select class="filter-select">
+                <option>Semua Kategori</option><option>Frontend</option><option>Backend</option><option>Mobile</option><option>Data</option><option>UI/UX</option>
+            </select>
+            <select class="filter-select">
+                <option>Semua Level</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option>
+            </select>
+        </div>
+
+        <div class="courses-grid">
+            <div class="course-card">
+                <div class="course-thumb"><i class="bi bi-filetype-html"></i><span class="course-level">Beginner</span></div>
+                <div class="course-body">
+                    <div class="course-cat">Frontend</div>
+                    <h3 class="course-title">HTML & CSS untuk Pemula</h3>
+                    <div class="course-mentor"><span class="course-mentor-avatar">AR</span> Ahmad Rizki</div>
+                    <div class="course-meta"><span><i class="bi bi-collection"></i> 12 modul</span><span><i class="bi bi-star-fill" style="color:#F59E0B"></i> 4.9</span></div>
+                    <div class="course-price">Gratis</div>
+                    <button class="btn-detail">Lihat Detail</button>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-thumb"><i class="bi bi-filetype-js"></i><span class="course-level">Beginner</span></div>
+                <div class="course-body">
+                    <div class="course-cat">Frontend</div>
+                    <h3 class="course-title">JavaScript Fundamental</h3>
+                    <div class="course-mentor"><span class="course-mentor-avatar">SR</span> Sari Rahayu</div>
+                    <div class="course-meta"><span><i class="bi bi-collection"></i> 20 modul</span><span><i class="bi bi-star-fill" style="color:#F59E0B"></i> 4.8</span></div>
+                    <div class="course-price">Rp 149.000</div>
+                    <button class="btn-detail">Lihat Detail</button>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-thumb"><i class="bi bi-atom"></i><span class="course-level">Intermediate</span></div>
+                <div class="course-body">
+                    <div class="course-cat">Frontend</div>
+                    <h3 class="course-title">React.js untuk Frontend Modern</h3>
+                    <div class="course-mentor"><span class="course-mentor-avatar">DP</span> Dian Pratama</div>
+                    <div class="course-meta"><span><i class="bi bi-collection"></i> 18 modul</span><span><i class="bi bi-star-fill" style="color:#F59E0B"></i> 4.9</span></div>
+                    <div class="course-price">Rp 249.000</div>
+                    <button class="btn-detail">Lihat Detail</button>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-thumb"><i class="bi bi-wind"></i><span class="course-level">Intermediate</span></div>
+                <div class="course-body">
+                    <div class="course-cat">Frontend</div>
+                    <h3 class="course-title">Tailwind CSS Mastery</h3>
+                    <div class="course-mentor"><span class="course-mentor-avatar">BS</span> Budi Santoso</div>
+                    <div class="course-meta"><span><i class="bi bi-collection"></i> 10 modul</span><span><i class="bi bi-star-fill" style="color:#F59E0B"></i> 4.7</span></div>
+                    <div class="course-price">Rp 199.000</div>
+                    <button class="btn-detail">Lihat Detail</button>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-thumb"><i class="bi bi-server"></i><span class="course-level">Intermediate</span></div>
+                <div class="course-body">
+                    <div class="course-cat">Backend</div>
+                    <h3 class="course-title">Node.js Backend API</h3>
+                    <div class="course-mentor"><span class="course-mentor-avatar">HK</span> Hendra Kusuma</div>
+                    <div class="course-meta"><span><i class="bi bi-collection"></i> 15 modul</span><span><i class="bi bi-star-fill" style="color:#F59E0B"></i> 4.8</span></div>
+                    <div class="course-price">Rp 249.000</div>
+                    <button class="btn-detail">Lihat Detail</button>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-thumb"><i class="bi bi-database"></i><span class="course-level">Intermediate</span></div>
+                <div class="course-body">
+                    <div class="course-cat">Backend</div>
+                    <h3 class="course-title">Express + MongoDB</h3>
+                    <div class="course-mentor"><span class="course-mentor-avatar">RF</span> Rizky Firmansyah</div>
+                    <div class="course-meta"><span><i class="bi bi-collection"></i> 14 modul</span><span><i class="bi bi-star-fill" style="color:#F59E0B"></i> 4.7</span></div>
+                    <div class="course-price">Rp 199.000</div>
+                    <button class="btn-detail">Lihat Detail</button>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-thumb"><i class="bi bi-filetype-py"></i><span class="course-level">Intermediate</span></div>
+                <div class="course-body">
+                    <div class="course-cat">Data</div>
+                    <h3 class="course-title">Python untuk Data Science</h3>
+                    <div class="course-mentor"><span class="course-mentor-avatar">NW</span> Nadia Wijaya</div>
+                    <div class="course-meta"><span><i class="bi bi-collection"></i> 22 modul</span><span><i class="bi bi-star-fill" style="color:#F59E0B"></i> 4.9</span></div>
+                    <div class="course-price">Rp 299.000</div>
+                    <button class="btn-detail">Lihat Detail</button>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-thumb"><i class="bi bi-phone"></i><span class="course-level">Intermediate</span></div>
+                <div class="course-body">
+                    <div class="course-cat">Mobile</div>
+                    <h3 class="course-title">Flutter Mobile Development</h3>
+                    <div class="course-mentor"><span class="course-mentor-avatar">AP</span> Andi Prasetyo</div>
+                    <div class="course-meta"><span><i class="bi bi-collection"></i> 16 modul</span><span><i class="bi bi-star-fill" style="color:#F59E0B"></i> 4.8</span></div>
+                    <div class="course-price">Rp 249.000</div>
+                    <button class="btn-detail">Lihat Detail</button>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-thumb"><i class="bi bi-palette"></i><span class="course-level">Beginner</span></div>
+                <div class="course-body">
+                    <div class="course-cat">UI/UX</div>
+                    <h3 class="course-title">UI/UX Design dengan Figma</h3>
+                    <div class="course-mentor"><span class="course-mentor-avatar">ML</span> Maya Lestari</div>
+                    <div class="course-meta"><span><i class="bi bi-collection"></i> 14 modul</span><span><i class="bi bi-star-fill" style="color:#F59E0B"></i> 4.9</span></div>
+                    <div class="course-price">Gratis</div>
+                    <button class="btn-detail">Lihat Detail</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <button class="page-btn"><i class="bi bi-chevron-left"></i></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn"><i class="bi bi-chevron-right"></i></button>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
